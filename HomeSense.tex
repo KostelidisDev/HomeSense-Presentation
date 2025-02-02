@@ -27,7 +27,7 @@
 
 \begin{frame}
 \frametitle{Εισαγωγή}
-Το \textbf{HomeSense} είναι ένα ολοκληρωμένο σύστημα συλλογής και οπτικοποίησης περιβαλλοντικών δεδομένων που βασίζεται στο \textbf{Raspberry Pi 3B+} και σε τρεις ειδικά σχεδιασμένες συσκευές (GasSense, LightSense, TempSense).
+Το \textbf{HomeSense} είναι ένα ολοκληρωμένο σύστημα συλλογής και οπτικοποίησης περιβαλλοντικών δεδομένων, το οποίο βασίζεται στο \textbf{Raspberry Pi 3B+} και σε τρεις ειδικά σχεδιασμένες συσκευές (GasSense, LightSense, TempSense).
 \end{frame}
 
 \begin{frame}
@@ -48,12 +48,12 @@
 \begin{frame}
 \frametitle{Αρχιτεκτονική Συστήματος}
 \begin{itemize}
-    \item \textbf{Raspberry Pi 3B+}: Κεντρικός υπολογιστής του συστήματος για επεξεργασία και αποθήκευση δεδομένων.
-    \item \textbf{NodeMCU ESP8266-based Devices}: Τρεις συσκευές που συνδέουν τους αισθητήρες στο δίκτυο Wi-Fi και κάνουν τα δεδομένα διαθέσιμα μέσω HTTP APIs. Οι αισθητήρες περιλαμβάνουν:
+    \item \textbf{Raspberry Pi 3B+}: Κεντρικός κόμβος του συστήματος, για συλλογή και αποθήκευση δεδομένων.
+    \item \textbf{NodeMCU ESP8266-based Devices}: Τρεις συσκευές που συνδέουν τους αισθητήρες στο δίκτυο Wi-Fi και κάνουν τα δεδομένα διαθέσιμα μέσω HTTP APIs. Οι συσκευές ειναι:
     \begin{itemize}
-        \item \textbf{GasSense}: MQ-6 (αναλογικός) για την μέτρηση αερίων.
-        \item \textbf{LightSense}: LDR (αναλογικός) για τη μέτρηση φωτεινότητας.
-        \item \textbf{TempSense}: DS18B20 (ψηφιακός) για την μέτρηση θερμοκρασίας.
+        \item \textbf{GasSense}: Με MQ-6 (αναλογικός) για την μέτρηση αερίων.
+        \item \textbf{LightSense}: Με LDR (αναλογικός) για τη μέτρηση φωτεινότητας.
+        \item \textbf{TempSense}: Με DS18B20 (ψηφιακός) για την μέτρηση θερμοκρασίας.
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -70,17 +70,27 @@
 \frametitle{Raspberry Pi 3B+}
 Το Raspberry Pi 3B+ είναι ο κεντρικός κόμβος του συστήματος, υπεύθυνος για:
 \begin{itemize}
-    \item Εκτέλεση εφαρμογών για την ληψη των δεδομένων.
-    \item Διαχείριση της βάσης δεδομένων για αποθήκευση των ιστορικών δεδομένων.
-    \item Παροχή διαδικτυακής διεπαφής για την οπτικοποίηση των δεδομένων.
+    \item Διαχείριση της βάσης δεδομένων.
+    \item Εκτέλεση εφαρμογών για την καταγραφή των δεδομένων στην βάση.
+    \item Διάθεση διαδικτυακής διεπαφής προς τον χρήστη.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{NodeSense}
+Το NodeSense ειναι ένα template λογισμικό το οποίο είναι συμβατό με τον μικροελεγκτή NodeMCU (ESP8266):
+\begin{itemize}
+    \item Ορίζει την διαδικασία σύνδεσης με το WiFi
+    \item Ορίζει τα Method/Path των HTTP API End-Points
+    \item Ορίζει το Response Type των HTTP API End-Points
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{NodeMCU ESP8266-based Devices}
-Οι συσκευές (GasSense, LigthSense, TempSensge) ειναι βασισμένες στο λογισμικό NodeSense το οποίο είναι συμβατό με τον μικροελεγκτή NodeMCU (ESP8266):
+Οι συσκευές (GasSense, LightSense, TempSense) είναι βασισμένες στο λογισμικό NodeSense το οποίο είναι συμβατό με τον μικροελεγκτή NodeMCU (ESP8266):
 \begin{itemize}
-    \item Είναι μικρό σε μέγεθος και έχει χαμηλή κατανάλωση ενέργειας.
+    \item Το NodeMCU είναι μικρό σε μέγεθος και έχει χαμηλή κατανάλωση ενέργειας.
     \item Έχει εύκολη ενσωμάτωση με το Raspberry Pi (μέσω HTTP API).
     \item Προγραμματίζετε εύκολα με το Arduino IDE, αλλά και με άλλες πλατφόρμες (π.χ. CLion with PlatformIO)
 \end{itemize}
@@ -118,13 +128,12 @@
 \begin{itemize}
     \item Ο χρήστης μέσω του UI κάνει pair τις συσκευές με το API.
     \item Το API, κάθε 5 δευτερόλεπτα, κάνει HTTP Call προς τη συσκευή για να λάβει τα δεδομένα του αισθητήρα.
-    \item Το API, αναλύει τα δεδομένα και τα αποθηκεύει σε βάση δεδομένων PostgreSQL.
+    \item Το API, αποθηκεύει τα δεδομένα σε βάση δεδομένων.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Οπτικοποίηση Δεδομένων}
-Τα δεδομένα οπτικοποιούνται μέσω μιας διαδικτυακής εφαρμογής που παρέχει:
+\frametitle{Διεπαφή Χρήστη}
 \begin{itemize}
     \item Προσθαφαίρεση των συσκευών
     \item Γραφήματα σε πραγματικό χρόνο.
@@ -139,13 +148,13 @@ DEMO TIME
 \begin{frame}
 \frametitle{Εργαλεία και Τεχνολογίες που Χρησιμοποιούνται}
 \begin{itemize}
-    \item \textbf{Docker}: Χρησιμοποιείται για την απομόνωση και εκτέλεση των εφαρμογών στο Raspberry Pi 3B+ 
-    \item \textbf{PostgreSQL}: Βάση δεδομένων για την αποθήκευση των δεδομένων των αισθητήρων.
+    \item \textbf{Docker}: Πλατφόρμα που επιτρέπει την ανάπτυξη, διανομή και εκτέλεση εφαρμογών μέσα σε απομονωμένα περιβάλλοντα.
+    \item \textbf{PostgreSQL}: Βάση δεδομένων για την αποθήκευση δεδομένων.
     \item \textbf{Spring Boot}: Χρησιμοποιείται για την ανάπτυξη του API.
     \item \textbf{HTML/CSS/JavaScript}: Χρησιμοποιείται για την ανάπτυξη του UI.
-    \item \textbf{KiCad}: Για την σχεδίαση των συσκευών (Schematic και PCB).
-    \item \textbf{CLion with PlatformIO}: Για την ανάπτυξη του λογισμικού των συσκευών.
-    \item \textbf{TexShop}: Για την συγγραφή του κειμένου και της παρουσίασης.
+    \item \textbf{KiCad}: Για τη σχεδίαση των συσκευών (Schematic και PCB).
+    \item \textbf{CLion με PlatformIO}: Για την ανάπτυξη του λογισμικού των συσκευών.
+    \item \textbf{TeXShop}: Για τη συγγραφή του κειμένου και της παρουσίασης.
 \end{itemize}
 \end{frame}
 
@@ -153,7 +162,10 @@ DEMO TIME
 \frametitle{Μελλοντική Ανάπτυξη}
 \begin{itemize}
     \item Επέκταση του συστήματος για την υποστήριξη περισσότερων αισθητήρων.
-    \item Ενσωμάτωση με άλλα συστήματα για πλήρη αυτοματοποίηση.
+    \item Επικοινωνία με SSL (HTTPS) για ασφάλεια των δεδομένων.
+    \item Αιτήματα μόνο από εξουσιοδοτημένους clients μέσω client-side certificates
+    \item Ταυτοποίηση και Εξουσιοδότηση
+    \item Ειδοποιήσεις
 \end{itemize}
 \end{frame}
 
@@ -282,8 +294,13 @@ I don’t have a 'mono-repo' project. I have an ‘ten-repo’ project.
 \end{frame}
 
 \begin{frame}
-\frametitle{Ευχαριστίες}
-Ευχαριστώ για την προσοχή σας. Είμαι διαθέσιμος για τυχόν ερωτήσεις!
+\frametitle{Q\&A}
+Ερωτήσεις
+\end{frame}
+
+\begin{frame}
+\frametitle{}
+Ευχαριστώ για την προσοχή σας
 \end{frame}
 
 \end{document}
